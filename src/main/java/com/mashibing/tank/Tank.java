@@ -6,6 +6,10 @@ public class Tank {
     private int x,y;
     private Dir dir =Dir.DOWN;
     private static final int SPEED=5;//坦克速度
+
+    public static int WIDTH = ResourceMgr.tankD.getWidth();//坦克宽度高度
+    public static int HEIGHT = ResourceMgr.tankD.getHeight();
+
     private boolean moving = false;//坦克禁止不动
     TankFrame tf =null;
 
@@ -32,12 +36,23 @@ public class Tank {
         this.moving = moving;
     }
 
-    //画坦克
+    //画坦克,根据按键方向
     public void paint(Graphics g){
-        Color c=g.getColor();
-        g.setColor(Color.YELLOW);
-        g.fillRect(x,y,50,50);
-        g.setColor(c);
+        switch (dir){
+            case LEFT:
+                g.drawImage(ResourceMgr.tankL,x,y,null);
+                break;
+            case UP:
+                g.drawImage(ResourceMgr.tankU,x,y,null);
+                break;
+            case RIGHT:
+                g.drawImage(ResourceMgr.tankR,x,y,null);
+                break;
+            case DOWN:
+                g.drawImage(ResourceMgr.tankD,x,y,null);
+                break;
+        }
+
         move();
     }
     //根据方向移动坦克
@@ -62,7 +77,11 @@ public class Tank {
 
     //发射子弹
     public void fire() {
+
+        int bx = this.x + Tank.WIDTH/2 - Bullet.WIDTH/2;
+        int by = this.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
+
         //坦克和子弹方向一致
-        tf.bullets.add(new Bullet(this.x,this.y,this.dir,this.tf)) ;
+        tf.bullets.add(new Bullet(bx,by,this.dir,this.tf)) ;
     }
 }
