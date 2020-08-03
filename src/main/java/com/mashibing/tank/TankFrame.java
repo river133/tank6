@@ -5,6 +5,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Hello world!
@@ -12,11 +14,12 @@ import java.awt.event.WindowEvent;
  */
 public class TankFrame extends Frame {
 
-    Tank myTank = new Tank(200,200,Dir.DOWN);
-    Bullet b = new Bullet(300,300,Dir.DOWN);
+    Tank myTank = new Tank(200,200,Dir.DOWN,this);
+    List<Bullet> bullets = new ArrayList<>();//子弹容器
+    static final  int GAME_WIDTH=800,GAME_HEIGHT=600;//窗口宽、高
 
     public TankFrame()   {
-        setSize(800,600);
+        setSize(GAME_WIDTH,GAME_HEIGHT);
         setResizable(false);
         setTitle("tank war");
         setVisible(true);
@@ -33,11 +36,34 @@ public class TankFrame extends Frame {
         });
     }
 
+    //处理双缓冲问题
+    Image offScreenImage=null;
+    @Override
+    public void update(Graphics g) {
+        if(offScreenImage==null){
+            offScreenImage=this.createImage(GAME_WIDTH,GAME_HEIGHT);
+        }
+        Graphics goffScreen = offScreenImage.getGraphics();
+        Color c =goffScreen.getColor();
+        goffScreen.setColor(Color.BLACK);
+        goffScreen.fillRect(0,0,GAME_WIDTH,GAME_HEIGHT);
+        goffScreen.setColor(c);
+        paint(goffScreen);
+        g.drawImage(offScreenImage,0,0,null);
+    }
+
     //绘制坦克
     @Override
     public void paint(Graphics g) {
+        Color c=g.getColor();
+        g.setColor(Color.WHITE);
+        g.drawString("子弹数量："+bullets.size(),10,60);
+        g.setColor(c);
+
         myTank.paint(g);//画坦克
-        b.paint(g);//画子弹
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).paint(g);
+        }
     }
 
     //键盘监听处理类
@@ -86,7 +112,9 @@ public class TankFrame extends Frame {
                     break;
                 case KeyEvent.VK_DOWN:
                     bD = false;
-
+                    break;
+                case KeyEvent.VK_CONTROL://发子弹
+                   myTank.fire();
                     break;
                 default:
                     break;
