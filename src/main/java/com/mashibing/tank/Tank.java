@@ -4,8 +4,8 @@ import java.awt.*;
 
 public class Tank {
     private int x,y;
-    private Dir dir;
-    private static final int SPEED=10;//坦克速度
+    private Dir dir =Dir.DOWN;
+    private static final int SPEED=5;//坦克速度
 
     private boolean moving = false;//坦克禁止不动
 
@@ -31,11 +31,12 @@ public class Tank {
         this.moving = moving;
     }
 
+    //画坦克
     public void paint(Graphics g){
         g.fillRect(x,y,50,50);
         move();
     }
-    //根据方向移动
+    //根据方向移动坦克
     private void move(){
         if(!moving)return;//坦克禁止则返回
 
