@@ -12,6 +12,7 @@ public class Tank {
 
     private boolean moving = false;//坦克禁止不动
     TankFrame tf =null;
+    private boolean living = true;//true：坦克或者
 
     public Tank(int x, int y, Dir dir, TankFrame tf) {
         this.x = x;
@@ -36,8 +37,27 @@ public class Tank {
         this.moving = moving;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     //画坦克,根据按键方向
     public void paint(Graphics g){
+        if(!living){
+            this.tf.tanks.remove(this);//碰撞死后不画坦克
+        };
         switch (dir){
             case LEFT:
                 g.drawImage(ResourceMgr.tankL,x,y,null);
@@ -77,11 +97,16 @@ public class Tank {
 
     //发射子弹
     public void fire() {
-
+        //调整子弹居中
         int bx = this.x + Tank.WIDTH/2 - Bullet.WIDTH/2;
         int by = this.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
 
         //坦克和子弹方向一致
         tf.bullets.add(new Bullet(bx,by,this.dir,this.tf)) ;
+    }
+
+    //坦克碰撞后
+    public void die() {
+        this.living=false;
     }
 }

@@ -14,8 +14,9 @@ import java.util.List;
  */
 public class TankFrame extends Frame {
 
-    Tank myTank = new Tank(200,200,Dir.DOWN,this);
+    Tank myTank = new Tank(200,500,Dir.DOWN,this);
     List<Bullet> bullets = new ArrayList<>();//子弹容器
+    List<Tank> tanks = new ArrayList<>();//敌方坦克容器
     static final  int GAME_WIDTH=800,GAME_HEIGHT=600;//窗口宽、高
 
     public TankFrame()   {
@@ -58,11 +59,24 @@ public class TankFrame extends Frame {
         Color c=g.getColor();
         g.setColor(Color.WHITE);
         g.drawString("子弹数量："+bullets.size(),10,60);
+        g.drawString("敌方坦克数量："+tanks.size(),10,80);
         g.setColor(c);
 
         myTank.paint(g);//画坦克
         for (int i = 0; i < bullets.size(); i++) {
             bullets.get(i).paint(g);
+        }
+
+        //画敌方坦克
+        for (int i = 0; i < tanks.size(); i++) {
+            tanks.get(i).paint(g);
+        }
+
+        //碰撞检测
+        for (int i = 0; i < bullets.size(); i++) {
+            for (int j = 0; j < tanks.size(); j++) {
+                bullets.get(i).collidewith(tanks.get(j));
+            }
         }
     }
 
