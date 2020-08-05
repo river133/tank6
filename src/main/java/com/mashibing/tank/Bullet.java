@@ -84,7 +84,10 @@ public class Bullet {
         if(rect1.intersects(rect2)){
             tank.die();//坦克死掉
             this.die();//子弹死掉
-            tf.explodes.add(new Explode(x,y,tf));
+            //调整爆炸中心位置
+            int ex = tank.getX() + Tank.WIDTH/2 - Explode.WIDTH/2;
+            int ey = tank.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
+            tf.explodes.add(new Explode(ex,ey,tf));
         }
     }
     //子弹碰撞后消失

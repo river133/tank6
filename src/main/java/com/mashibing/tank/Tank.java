@@ -109,9 +109,18 @@ public class Tank {
                 break;
         }
         //敌人坦克自动开火
-        if (random.nextInt(10) > 8){
+        if (this.group == Group.BAD && random.nextInt(100) > 96){
             this.fire();
         }
+        //改变坦克方向
+        if (this.group == Group.BAD && random.nextInt(100) > 96){
+            this.randomDir();
+        }
+
+    }
+    //随机改变方向
+    private void randomDir(){
+       this.dir =  Dir.values()[random.nextInt(4)];
     }
 
     //发射子弹
