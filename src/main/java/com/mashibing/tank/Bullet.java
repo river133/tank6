@@ -12,12 +12,22 @@ public class Bullet {
 
     private boolean living=true;//子弹存活状态，true：存活
     TankFrame tf =null;
+    private Group group = Group.BAD;
 
-    public Bullet( int x, int y, Dir dir,TankFrame tf) {
+    public Bullet( int x, int y, Dir dir,Group group,TankFrame tf) {
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.group=group;
         this.tf = tf;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     public void paint(Graphics g){
@@ -65,11 +75,16 @@ public class Bullet {
 
     //坦克-子弹 碰撞检测
     public void collidewith(Tank tank) {
+        //排除自己的炮弹
+        if(this.group == tank.getGroup())return;
+
+        //new太多的检测类，bug带处理
         Rectangle rect1 = new Rectangle(this.x,this.y,WIDTH,HEIGHT);
         Rectangle rect2 = new Rectangle(tank.getX(),tank.getY(),tank.WIDTH,tank.HEIGHT);
         if(rect1.intersects(rect2)){
             tank.die();//坦克死掉
             this.die();//子弹死掉
+            tf.explodes.add(new Explode(x,y,tf));
         }
     }
     //子弹碰撞后消失

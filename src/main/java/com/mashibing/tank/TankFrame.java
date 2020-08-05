@@ -13,11 +13,14 @@ import java.util.List;
  *
  */
 public class TankFrame extends Frame {
-
-    Tank myTank = new Tank(200,500,Dir.DOWN,this);
+    //自己坦克
+    Tank myTank = new Tank(200,500,Dir.DOWN,Group.GOOD,this);
     List<Bullet> bullets = new ArrayList<>();//子弹容器
     List<Tank> tanks = new ArrayList<>();//敌方坦克容器
-    static final  int GAME_WIDTH=800,GAME_HEIGHT=600;//窗口宽、高
+    List<Explode> explodes = new ArrayList<>();//爆炸容器
+//    Explode e = new Explode(100,100,this);
+
+    static final  int GAME_WIDTH=900,GAME_HEIGHT=800;//窗口宽、高
 
     public TankFrame()   {
         setSize(GAME_WIDTH,GAME_HEIGHT);
@@ -60,6 +63,7 @@ public class TankFrame extends Frame {
         g.setColor(Color.WHITE);
         g.drawString("子弹数量："+bullets.size(),10,60);
         g.drawString("敌方坦克数量："+tanks.size(),10,80);
+        g.drawString("爆炸的数量："+explodes.size(),10,100);
         g.setColor(c);
 
         myTank.paint(g);//画坦克
@@ -72,7 +76,12 @@ public class TankFrame extends Frame {
             tanks.get(i).paint(g);
         }
 
-        //碰撞检测
+        //画爆炸
+        for (int i = 0; i < explodes.size(); i++) {
+            explodes.get(i).paint(g);
+        }
+
+        //子弹-坦克 碰撞检测
         for (int i = 0; i < bullets.size(); i++) {
             for (int j = 0; j < tanks.size(); j++) {
                 bullets.get(i).collidewith(tanks.get(j));
@@ -138,7 +147,6 @@ public class TankFrame extends Frame {
 
         //将方向传递到坦克类 ，改变方向
         private void setMainTankDir() {
-
             if(!bL && !bU && !bR && !bD) {
                 myTank.setMoving(false);//代表坦克禁止状态
             }else {

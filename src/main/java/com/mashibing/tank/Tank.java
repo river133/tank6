@@ -1,24 +1,39 @@
 package com.mashibing.tank;
 
 import java.awt.*;
+import java.util.Random;
 
 public class Tank {
-    private int x,y;
-    private Dir dir =Dir.DOWN;
-    private static final int SPEED=5;//坦克速度
+    private static final int SPEED=1;//坦克速度
 
     public static int WIDTH = ResourceMgr.tankD.getWidth();//坦克宽度高度
     public static int HEIGHT = ResourceMgr.tankD.getHeight();
 
-    private boolean moving = false;//坦克禁止不动
-    TankFrame tf =null;
-    private boolean living = true;//true：坦克或者
+    private Random random=new Random();
 
-    public Tank(int x, int y, Dir dir, TankFrame tf) {
+    private int x,y;
+
+    private Dir dir =Dir.DOWN;
+
+    private boolean moving =true;//坦克禁止不动
+    private TankFrame tf =null;
+    private boolean living = true;//true：坦克或者
+    private Group group = Group.BAD;//默认为敌方坦克
+
+    public Tank(int x, int y, Dir dir,Group group, TankFrame tf) {
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.group=group;
         this.tf = tf;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     public Dir getDir() {
@@ -93,6 +108,10 @@ public class Tank {
                 y+=SPEED;
                 break;
         }
+        //敌人坦克自动开火
+        if (random.nextInt(10) > 8){
+            this.fire();
+        }
     }
 
     //发射子弹
@@ -100,9 +119,7 @@ public class Tank {
         //调整子弹居中
         int bx = this.x + Tank.WIDTH/2 - Bullet.WIDTH/2;
         int by = this.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
-
-        //坦克和子弹方向一致
-        tf.bullets.add(new Bullet(bx,by,this.dir,this.tf)) ;
+        tf.bullets.add(new Bullet(bx,by,this.dir,this.group,this.tf)) ;
     }
 
     //坦克碰撞后
