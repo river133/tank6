@@ -3,6 +3,8 @@ package com.mashibing.tankStrateg;
 public class Main {
     public static void main(String[] args) throws Exception{
         TankFrame tf = new TankFrame();
+        System.out.println("测试回滚");
+
 
         int initTankCount = PropertyMgr.get("initTankCount");
 
