@@ -7,6 +7,9 @@ public class Bullet {
     public static int WIDTH = ResourceMgr.bulletD.getWidth();//子弹宽度高度
     public static int HEIGHT = ResourceMgr.bulletD.getHeight();
 
+    //边界检测
+    Rectangle rect = new Rectangle();
+
     private int x,y;
     private Dir dir;
 
@@ -20,6 +23,11 @@ public class Bullet {
         this.dir = dir;
         this.group=group;
         this.tf = tf;
+
+        rect.x=this.x;
+        rect.y=this.y;
+        rect.width=WIDTH;
+        rect.height=HEIGHT;
     }
 
     public Group getGroup() {
@@ -67,6 +75,10 @@ public class Bullet {
                 y+=SPEED;
                 break;
         }
+        //更新rect矩形边界
+        rect.x=this.x;
+        rect.y=this.y;
+
         //子弹出边界则消失，容器size--
         if(x<0 || y<0 || x>TankFrame.GAME_WIDTH || y>TankFrame.GAME_HEIGHT){
             living=false;
@@ -78,10 +90,7 @@ public class Bullet {
         //排除自己的炮弹
         if(this.group == tank.getGroup())return;
 
-        //new太多的检测类，bug带处理
-        Rectangle rect1 = new Rectangle(this.x,this.y,WIDTH,HEIGHT);
-        Rectangle rect2 = new Rectangle(tank.getX(),tank.getY(),tank.WIDTH,tank.HEIGHT);
-        if(rect1.intersects(rect2)){
+        if(rect.intersects(tank.rect)){
             tank.die();//坦克死掉
             this.die();//子弹死掉
             //调整爆炸中心位置
