@@ -3,20 +3,22 @@ package com.mashibing.tankFacade;
 import java.awt.*;
 import java.util.Random;
 
-public class Tank {
+public class Tank extends GameObject{
     private static final int SPEED=4;//坦克速度
 
     public static int WIDTH = ResourceMgr.goodTankU.getWidth();//坦克宽度高度
     public static int HEIGHT = ResourceMgr.goodTankU.getHeight();
-
+    Rectangle rect = new Rectangle();
     private Random random=new Random();
 
     public int x,y;
+    public int oldX,oldY;//碰撞前，记录上一次位置
 
-     Dir dir =Dir.DOWN;
+
+    public Dir dir =Dir.DOWN;
 
     private boolean moving =true;//坦克禁止不动
-    GameModel gm;
+    public GameModel gm;
     private boolean living = true;//true：坦克或者
      Group group = Group.BAD;//默认为敌方坦克
 
@@ -28,6 +30,11 @@ public class Tank {
         this.dir = dir;
         this.group=group;
         this.gm = gm;
+
+        rect.x=x;
+        rect.y=y;
+        rect.width=WIDTH;
+        rect.height=HEIGHT;
 
         if(group == Group.GOOD){
             String goodFs = PropertyMgr.getStr("goodFsFacade");
@@ -51,6 +58,10 @@ public class Tank {
 
     public Dir getDir() {
         return dir;
+    }
+
+    public Rectangle getRect() {
+        return rect;
     }
 
     public void setDir(Dir dir) {
@@ -80,12 +91,16 @@ public class Tank {
     public void setY(int y) {
         this.y = y;
     }
+    public void stop(){
+        moving=false;
+    }
 
+    @Override
     //画坦克,根据按键方向
     public void paint(Graphics g){
         if(!living){
-            this.gm.tanks.remove(this);//碰撞死后不画坦克
-        };
+            gm.remove(this);//碰撞死后不画坦克
+        }
         switch (dir){
             case LEFT:
                 g.drawImage(this.group== Group.GOOD? ResourceMgr.goodTankL:ResourceMgr.badTankL,x,y,null);
@@ -104,7 +119,9 @@ public class Tank {
     }
     //根据方向移动坦克
     private void move(){
-        if(!moving)return;//坦克禁止则返回
+//        oldX=x;
+//        oldY=y;
+        if(!moving) return;//坦克禁止则返回
 
         switch (dir){
             case LEFT:
@@ -129,7 +146,8 @@ public class Tank {
             this.randomDir();
         }
         boundsCheck();//坦克边界检测
-
+        rect.x=x;
+        rect.y=y;
     }
     //坦克边界检测
     private void boundsCheck(){
@@ -153,4 +171,6 @@ public class Tank {
     public void die() {
         this.living=false;
     }
+
+
 }

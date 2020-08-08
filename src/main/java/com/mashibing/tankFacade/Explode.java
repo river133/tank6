@@ -2,7 +2,7 @@ package com.mashibing.tankFacade;
 
 import java.awt.*;
 
-public class Explode {
+public class Explode extends GameObject{
     public static int WIDTH = ResourceMgr.explodes[0].getWidth();//爆炸宽度高度
     public static int HEIGHT = ResourceMgr.explodes[0].getHeight();//爆炸宽度高度
 
@@ -16,11 +16,11 @@ public class Explode {
         this.gm = gm;
 //        new Audio("audio/explode.wav").run();
     }
-
+    @Override
     public void paint(Graphics g){
         g.drawImage(ResourceMgr.explodes[step++],x,y,null);
         if(step >= ResourceMgr.explodes.length){
-            gm.explodes.remove(this);
+            gm.remove(this);
         }
     }
 }

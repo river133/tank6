@@ -16,11 +16,6 @@ public class PropertyMgr {
             e.printStackTrace();
         }
     }
-//    public static Object get(String key){
-//        System.out.println("props: "+props);
-//        if(props==null) return null ;
-//        return props.get(key);
-//    }
     public static int get(String key){
         if(props==null) return -1 ;
         return Integer.parseInt((String)props.get(key)) ;
