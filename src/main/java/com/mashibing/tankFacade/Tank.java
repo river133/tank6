@@ -18,21 +18,19 @@ public class Tank extends GameObject{
     public Dir dir =Dir.DOWN;
 
     private boolean moving =true;//坦克禁止不动
-    public GameModel gm;
     private boolean living = true;//true：坦克或者
      Group group = Group.BAD;//默认为敌方坦克
 
     FireStrateg fs;//策略模式发射子弹
 
-    public Tank(int x, int y, Dir dir, Group group, GameModel gm) {
+    public Tank(int x, int y, Dir dir, Group group ) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group=group;
-        this.gm = gm;
 
-        rect.x=x;
-        rect.y=y;
+        rect.x=this.x;
+        rect.y=this.y;
         rect.width=WIDTH;
         rect.height=HEIGHT;
 
@@ -46,6 +44,7 @@ public class Tank extends GameObject{
         }else {
             fs = new DefaultFireStrateg();
         }
+        GameModel.getInstance().add(this);
     }
 
     public Group getGroup() {
@@ -99,7 +98,7 @@ public class Tank extends GameObject{
     //画坦克,根据按键方向
     public void paint(Graphics g){
         if(!living){
-            gm.remove(this);//碰撞死后不画坦克
+            GameModel.getInstance().remove(this);//碰撞死后不画坦克
         }
         switch (dir){
             case LEFT:
@@ -117,10 +116,18 @@ public class Tank extends GameObject{
         }
         move();
     }
+
+    //坦克与坦克相撞后退回到原来的位置
+    public void back(){
+        x=oldX;
+        y=oldY;
+    }
     //根据方向移动坦克
     private void move(){
-//        oldX=x;
-//        oldY=y;
+        oldX=x;
+        oldY=y;
+//        System.out.println(oldX);
+//        System.out.println(oldY);
         if(!moving) return;//坦克禁止则返回
 
         switch (dir){

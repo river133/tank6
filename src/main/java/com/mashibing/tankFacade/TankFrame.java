@@ -12,7 +12,7 @@ import java.awt.event.WindowEvent;
  */
 public class TankFrame extends Frame {
     //门面设计模式
-    GameModel gm = new GameModel();
+    GameModel gm = GameModel.getInstance();
 
     static final  int GAME_WIDTH=900,GAME_HEIGHT=800;//窗口宽、高
 

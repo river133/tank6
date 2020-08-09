@@ -10,6 +10,8 @@ public class ColliderChain implements Collider{
         //添加碰撞器
       add(new BulletTankCollider());
       add(new TankTankCollider());
+      add(new BulletWallCollider());
+      add(new WallTankCollider());
     }
 
     public void add(Collider c){
@@ -20,7 +22,7 @@ public class ColliderChain implements Collider{
     public boolean collide(GameObject o1, GameObject o2) {
         for (int i = 0; i < colliders.size(); i++) {
             //相撞后不在往下执行
-            if (colliders.get(i).collide(o1,o2)) {
+            if (!colliders.get(i).collide(o1,o2)) {
                 return false;
             }
         }

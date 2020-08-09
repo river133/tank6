@@ -5,28 +5,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
-门面设计模式
+门面设计模式 设计为单例
  */
 public class GameModel {
-    //自己坦克
-    Tank myTank = new Tank(200,500, Dir.DOWN, Group.GOOD,this);
+    private static final GameModel INSTANCE=new GameModel();
+
+    static {
+        INSTANCE.init();
+    }
+
+    Tank myTank ;
     //责任链模式ColliderChain
     ColliderChain chain = new ColliderChain();
 
     //坦克、子弹、爆炸容器
     private List<GameObject> objects = new ArrayList<>();
 
+    public static GameModel getInstance(){
+        return INSTANCE;
+    }
 
-    public GameModel() {
+    private GameModel() {
+    }
+
+    public  void init(){
+        //自己坦克
+         myTank = new Tank(200,500, Dir.DOWN, Group.GOOD);
         int initTankCount = PropertyMgr.get("initTankCount");
-        System.out.println(initTankCount);
 
         //初始化敌方坦克
         for (int i = 0; i < initTankCount; i++) {
-            add(new Tank(50+i*80,200, Dir.DOWN, Group.BAD,this));
+            new Tank(50+i*80,200, Dir.DOWN, Group.BAD);
         }
+        //初始化墙体
+//        add(new Wall(150,150,200,20));
+//        add(new Wall(550,150,200,20));
+//        add(new Wall(200,400,20,300));
+//        add(new Wall(650,400,20,300));
+        new Wall(150,150,200,20);
+        new Wall(550,150,200,20);
+        new Wall(200,400,20,300);
+        new Wall(650,400,20,300);
     }
-
     public void add(GameObject go){
         this.objects.add(go);
     }
